@@ -39,7 +39,7 @@ function s:FindCase(patterns)
     let line = getline(ln)
     for pattern in keys(a:patterns)
       if line =~ pattern
-        if s:pattern == 'spec'
+        if s:pattern == 'spec\.rb$'
           return a:patterns[pattern](ln)
         else
           return a:patterns[pattern](line)
@@ -90,7 +90,7 @@ function s:RunSpec()
     let cmd = cmd . " --drb"
   endif
 
-  let case = s:FindCase(s:test_case_patterns['spec'])
+  let case = s:FindCase(s:test_case_patterns['spec\.rb$'])
   if s:test_scope == 2 || case != 'false'
     let cmd = substitute(cmd, '%c', case, '')
     let cmd = substitute(cmd, '%p', s:EscapeBackSlash(@%), '')
@@ -144,7 +144,7 @@ endfunction
 
 let s:test_patterns = {}
 let s:test_patterns['test'] = function('s:RunTest')
-let s:test_patterns['spec'] = function('s:RunSpec')
+let s:test_patterns['spec\.rb$'] = function('s:RunSpec')
 let s:test_patterns['\.feature$'] = function('s:RunFeature')
 
 function s:GetTestCaseName1(str)
@@ -177,7 +177,7 @@ endfunction
 
 let s:test_case_patterns = {}
 let s:test_case_patterns['test'] = {'^\s*def test':function('s:GetTestCaseName1'), '^\s*test \s*"':function('s:GetTestCaseName2'), "^\\s*test \\s*'":function('s:GetTestCaseName4'), '^\s*should \s*"':function('s:GetTestCaseName3'), "^\\s*should \\s*'":function('s:GetTestCaseName5')}
-let s:test_case_patterns['spec'] = {'^\s*\(it\|example\|describe\|context\) \s*':function('s:GetSpecLine')}
+let s:test_case_patterns['spec\.rb$'] = {'^\s*\(it\|example\|describe\|context\) \s*':function('s:GetSpecLine')}
 let s:test_case_patterns['feature'] = {'^\s*Scenario:':function('s:GetStoryLine')}
 
 let s:save_cpo = &cpo
