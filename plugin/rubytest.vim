@@ -154,17 +154,7 @@ function s:RunSpec()
   if s:test_scope == 2 || case != 'false'
     let cmd = substitute(cmd, '%c', case, '')
     let cmd = substitute(cmd, '%p', s:EscapeBackSlash(@%), '')
-    if g:rubytest_in_quickfix > 0
-      let s:oldefm = &efm
-      let &efm = s:efm . s:efm_backtrace . ',' . s:efm_ruby . ',' . s:oldefm . ',%-G%.%#'
-
-      cex system(cmd)
-      cw
-
-      let &efm = s:oldefm
-    else
-      exe "!echo '" . cmd . "' && " . cmd
-    endif
+    call s:ExecTest(cmd)
   else
     echo 'No spec found.'
   endif
@@ -183,18 +173,8 @@ function s:RunFeature()
   let case = s:FindCase(s:test_case_patterns['feature'])
   if s:test_scope == 2 || case != 'false'
     let cmd = substitute(cmd, '%c', case, '')
-    let cmd = substitute(cmd, '%', s:EscapeBackSlash(@%), '')
-    if g:rubytest_in_quickfix > 0
-      let s:oldefm = &efm
-      let &efm = s:efm . s:efm_backtrace . ',' . s:efm_ruby . ',' . s:oldefm . ',%-G%.%#'
-
-      cex system(cmd)
-      cw
-
-      let &efm = s:oldefm
-    else
-      exe "!echo '" . cmd . "' && " . cmd
-    endif
+    let cmd = substitute(cmd, '%p', s:EscapeBackSlash(@%), '')
+    call s:ExecTest(cmd)
   else
     echo 'No story found.'
   endif
