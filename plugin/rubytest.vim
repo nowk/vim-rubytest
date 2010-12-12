@@ -169,7 +169,6 @@ function s:RunFeature()
   if s:test_scope == 2 || case != 'false'
     let cmd = substitute(cmd, '%c', case, '')
     let cmd = substitute(cmd, '%', s:EscapeBackSlash(@%), '')
-    let cmd = substitute(cmd, 'spec' 'rspec', '')
     if g:rubytest_in_quickfix > 0
       let s:oldefm = &efm
       let &efm = s:efm . s:efm_backtrace . ',' . s:efm_ruby . ',' . s:oldefm . ',%-G%.%#'
