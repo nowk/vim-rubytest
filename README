@@ -30,7 +30,9 @@ You can customize the command which will be used to run the test case by setttin
   let g:rubytest_cmd_test = "ruby %p"
   let g:rubytest_cmd_testcase = "ruby %p -n '/%c/'"
   let g:rubytest_cmd_spec = "spec -f specdoc %p"
-  let g:rubytest_cmd_example = "spec -f specdoc %p -e '%c'"
+  let g:rubytest_cmd_spec_example = "spec -f specdoc %p -e '%c'"
+  let g:rubytest_cmd_rspec = "rspec %p"
+  let g:rubytest_cmd_rspec_example = "rspec %p -e '%c'"
   let g:rubytest_cmd_feature = "cucumber %p"
   let g:rubytest_cmd_story = "cucumber %p -n '%c'"
 
@@ -47,3 +49,9 @@ You can change default key bindings:
   map <Leader>\ <Plug>RubyTestRun " change from <Leader>t to <Leader>\
   map <Leader>] <Plug>RubyFileRun " change from <Leader>T to <Leader>]
 
+
+
+* Forgot to mention in my commits
+
+  `g:rubytest_cmd_example` is now `g:rubytest_cmd_spec_example`
+  And, added to additional options specifically for Rspec 2 commands
