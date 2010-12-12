@@ -23,8 +23,14 @@ endif
 if !exists("g:rubytest_cmd_spec")
   let g:rubytest_cmd_spec = "spec -f specdoc %p"
 endif
-if !exists("g:rubytest_cmd_example")
-  let g:rubytest_cmd_example = "spec -f specdoc %p -l %c"
+if !exists("g:rubytest_cmd_spec_example")
+  let g:rubytest_cmd_spec_example = "spec -f specdoc %p -l %c"
+endif
+if !exists("g:rubytest_cmd_rspec")
+  let g:rubytest_cmd_rspec = "rspec %p"
+endif
+if !exists("g:rubytest_cmd_rspec_example")
+  let g:rubytest_cmd_rspec_example = "rspec %p -l %c"
 endif
 if !exists("g:rubytest_cmd_feature")
   let g:rubytest_cmd_feature = "cucumber %p"
@@ -79,11 +85,50 @@ function s:RunTest()
   endif
 endfunction
 
+function s:WhichRspec()
+  " find the spec dir, assuming we are using rspec in the normal directory
+  " structure
+  "
+  "   example-project/
+  "     .rspec
+  "     lib/
+  "     spec/
+  "     ...
+  "
+  let spec_dir = finddir("spec", expand("%:p:h") . ";")
+  if spec_dir == "spec" || spec_dir == ""
+    let _dir = ""
+  else
+    let _dir = substitute(spec_dir, "/spec$", "", "")
+  endif
+
+  " at this point this is generally the easiest way to distinguish Rspec 2
+  " from older version, though is generally only true when generating within a
+  " rails 3 app
+  " TODO view spec_helper.rb for Rspec.configure vs Spec::Runner.configure
+  let dot_rspec = findfile(".rspec", _dir)
+  if dot_rspec == ".rspec"
+    return "rspec"
+  else
+    return "spec"
+  endif
+endfunction
+
 function s:RunSpec()
+  let which_rspec = s:WhichRspec()
+
   if s:test_scope == 1
-    let cmd = g:rubytest_cmd_example
+    if which_rspec == "rspec"
+      let cmd = g:rubytest_cmd_rspec_example
+    else
+      let cmd = g:rubytest_cmd_spec_example
+    endif
   elseif s:test_scope == 2
-    let cmd = g:rubytest_cmd_spec
+    if which_rspec == "rspec"
+      let cmd = g:rubytest_cmd_rspec
+    else
+      let cmd = g:rubytest_cmd_spec
+    endif
   endif
 
   if g:rubytest_spec_drb > 0
@@ -123,7 +168,8 @@ function s:RunFeature()
   let case = s:FindCase(s:test_case_patterns['feature'])
   if s:test_scope == 2 || case != 'false'
     let cmd = substitute(cmd, '%c', case, '')
-    let cmd = substitute(cmd, '%p', s:EscapeBackSlash(@%), '')
+    let cmd = substitute(cmd, '%', s:EscapeBackSlash(@%), '')
+    let cmd = substitute(cmd, 'spec' 'rspec', '')
     if g:rubytest_in_quickfix > 0
       let s:oldefm = &efm
       let &efm = s:efm . s:efm_backtrace . ',' . s:efm_ruby . ',' . s:oldefm . ',%-G%.%#'
