@@ -57,3 +57,9 @@ You can change default key bindings:
 
   `g:rubytest_cmd_example` is now `g:rubytest_cmd_spec_example`
   And, added two additional options specifically for Rspec 2 commands
+Contributors
+------------
+
+* Bogdan Gusiev
+* Yung Hwa Kwon (nowk)
+* J. Weir 
