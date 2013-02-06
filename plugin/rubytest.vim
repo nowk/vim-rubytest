@@ -150,7 +150,7 @@ function s:RunSpec()
     let cmd = cmd . " --drb"
   endif
 
-  let case = s:FindCase(s:test_case_patterns['spec\.rb$'])
+  let case = s:FindCase(s:test_case_patterns['spec'])
   if s:test_scope == 2 || case != 'false'
     let cmd = substitute(cmd, '%c', case, '')
     let cmd = substitute(cmd, '%p', s:EscapeBackSlash(@%), '')
@@ -217,8 +217,8 @@ endfunction
 
 let s:test_case_patterns = {}
 let s:test_case_patterns['test'] = {'^\s*def test':function('s:GetTestCaseName1'), '^\s*test \s*"':function('s:GetTestCaseName2'), "^\\s*test \\s*'":function('s:GetTestCaseName4'), '^\s*should \s*"':function('s:GetTestCaseName3'), "^\\s*should \\s*'":function('s:GetTestCaseName5')}
-let s:test_case_patterns['spec\.rb$'] = {'^\s*\(it\|example\|describe\|context\|feature\|scenario\) \s*':function('s:GetSpecLine')}
-let s:test_case_patterns['feature$'] = {'^\s*Scenario\( Outline\)\?:':function('s:GetStoryLine')}
+let s:test_case_patterns['spec'] = {'^\s*\(it\|example\|describe\|context\|feature\|scenario\) \s*':function('s:GetSpecLine')}
+let s:test_case_patterns['feature'] = {'^\s*Scenario\( Outline\)\?:':function('s:GetStoryLine')}
 
 let s:save_cpo = &cpo
 set cpo&vim
